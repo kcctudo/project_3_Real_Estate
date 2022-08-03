@@ -1,0 +1,71 @@
+[
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_MyAddress",
+				"type": "address"
+			}
+		],
+		"name": "GetUserInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_FirstName",
+				"type": "string"
+			},
+			{
+				"name": "_LastName",
+				"type": "string"
+			},
+			{
+				"name": "_MyAddress",
+				"type": "address"
+			},
+			{
+				"name": "_TradeType",
+				"type": "string"
+			},
+			{
+				"name": "_TradeLimit",
+				"type": "uint256"
+			},
+			{
+				"name": "_Area",
+				"type": "string"
+			}
+		],
+		"name": "SetUserInfo",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
