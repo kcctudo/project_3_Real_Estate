@@ -9,6 +9,8 @@ from web3 import Web3
 from pathlib import Path
 from dotenv import load_dotenv
 import streamlit as st
+import datetime
+import calendar
 # %%
 load_dotenv()
 
@@ -35,8 +37,8 @@ def load_contract():
 
     # Get the contract
     contract = w3.eth.contract(
-        address=contract_address,
-        abi=houseTrading_abi
+    address=contract_address,
+    abi=houseTrading_abi
     )
 
     return contract
@@ -55,28 +57,51 @@ firstName = st.text_input("Enter your first name")
 lastName = st.text_input("Enter your last name")
 address = st.text_input("Enter your wallet address")
 tradeType = st.selectbox("Choose your trade type", ['Long', 'Short'])
-tradeLimit = st.selectbox("Choose your max loss in eth", ['5','10','15','20','30','40','50','100','500','1000','10000'])
+limitPrice = st.number_input("Enter your limit price", )
+limitPrice = int(limitPrice)
+tradeLimit = st.selectbox("Choose your max loss in eth", ['1','5','10','15','20','30','40','50','100','500','1000','10000'])
 tradeLimit = int(tradeLimit)
+contractMonth = st.selectionbox("Enter your contract month", ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
+contractYear = st.number_input("Enter your contract year", )
+contractYear = int(contractYear)
+lastDOM = calendar.monthrange(contractYear, contractMonth)[1]
+expDate = datetime.datetime(contractYear, contractMonth,lastDOM)
+
 city = ['','Central Toronto', 'Central Toronto-Alexandra Park', 'Central Toronto-Bay Street Corridor', 'Central Toronto-Forest Hill',
         'Toronto Old York', 'Toronto Old York-Baby Point','Toronto Scarborough-Guildwood','Miami, FL', 'St.Petersburg, FL', 
         'Key West, FL', 'Los Angeles, CA', 'Anaheim, CA', 'Beverly Hills, CA', 'Manhattan, NY', 'Brooklyn, NY']
 neighborhood = st.selectbox("Choose your neighborhood", city)
 
 if st.button("Submit Trade"):     
+    
+    # Inputting user's entered info into the contract
     txHash = contract.functions.SetUserInfo(
-            firstName, lastName, address, tradeType, tradeLimit, neighborhood).transact({'from': address, 'gas': 1000000}
+            firstName, lastName, address, tradeType, limitPrice, tradeLimit, neighborhood, expDate).transact({'from': address, 'gas': 1000000}
             )
     receipt = w3.eth.waitForTransactionReceipt(txHash)
     st.write("Transaction receipt mined:")
     st.write(dict(receipt))
-    import time
-    time.sleep(10)
-    contract.functions.GetUserInfo(address).call()
+    
+    # Depositing max loss amount from user's address into the contract
+    # Convert eth amount to Wei
+    wei_value = w3.toWei(tradeLimit, "ether")
+    
+    w3.eth.sendTransaction(
+        {"from": address,
+       "to": contract.address,
+       "value": wei_value,
+    })    
+    
+    
+    
+    #import time
+    #time.sleep(10)
+    #st.write(contract.functions.GetUserInfo(address).call())
 st.markdown("---")                                                                                        
     
                                                                                         
     
-
+#contract.functions.matchBuySell().transact()
 
 
 
