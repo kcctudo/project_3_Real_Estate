@@ -1,200 +1,37 @@
 [
 	{
-		"constant": false,
-		"inputs": [],
-		"name": "deposit",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
 		"inputs": [
 			{
-				"name": "_FirstName",
-				"type": "string"
-			},
-			{
-				"name": "_LastName",
-				"type": "string"
-			},
-			{
-				"name": "_MyAddress",
+				"internalType": "address",
+				"name": "myAddress",
 				"type": "address"
-			},
-			{
-				"name": "_TradeType",
-				"type": "string"
-			},
-			{
-				"name": "_LimitPrice",
-				"type": "uint256"
-			},
-			{
-				"name": "_MaxLoss",
-				"type": "uint256"
-			},
-			{
-				"name": "_Area",
-				"type": "string"
 			}
 		],
-		"name": "SetUserInfo",
-		"outputs": [],
-		"payable": false,
+		"name": "setArray",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"payable": true,
 		"stateMutability": "payable",
 		"type": "fallback"
 	},
 	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "indx",
-				"type": "uint256"
-			}
-		],
-		"name": "GetUserInfo",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "string"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "infoByUser",
-		"outputs": [
-			{
-				"name": "FirstName",
-				"type": "string"
-			},
-			{
-				"name": "LastName",
-				"type": "string"
-			},
-			{
-				"name": "MyAddress",
-				"type": "address"
-			},
-			{
-				"name": "TradeType",
-				"type": "string"
-			},
-			{
-				"name": "LimitPrice",
-				"type": "uint256"
-			},
-			{
-				"name": "MaxLoss",
-				"type": "uint256"
-			},
-			{
-				"name": "Area",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
 		"inputs": [],
-		"name": "matchBuySell",
+		"name": "arrayCheck",
 		"outputs": [
 			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
+				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "userinfo",
-		"outputs": [
-			{
-				"name": "FirstName",
-				"type": "string"
-			},
-			{
-				"name": "LastName",
-				"type": "string"
-			},
-			{
-				"name": "MyAddress",
-				"type": "address"
-			},
-			{
-				"name": "TradeType",
-				"type": "string"
-			},
-			{
-				"name": "LimitPrice",
-				"type": "uint256"
-			},
-			{
-				"name": "MaxLoss",
-				"type": "uint256"
-			},
-			{
-				"name": "Area",
-				"type": "string"
-			}
-		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	}

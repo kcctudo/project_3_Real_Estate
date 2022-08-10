@@ -63,7 +63,16 @@ def deposit_contract(deposit_amount, user_address):
        "value": wei_value,
     })    
     
+
+# %% 
+
+# Trade settlement 
+# - Check user's target price with official released price
+# - Withdraw the appropriate fund from contract and deposit to the user's address
+
+def trade_settlement(user_address):
     
+
     
     
     

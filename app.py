@@ -59,7 +59,11 @@ address = st.text_input("Enter your wallet address")
 tradeType = st.selectbox("Choose your trade type", ['Long', 'Short'])
 limitPrice = st.number_input("Enter your limit price", )
 limitPrice = int(limitPrice)
+limitPrice = w3.toWei(limitPrice, "ether")
 tradeLimit = st.selectbox("Choose your max loss in eth", ['1','5','10','15','20','30','40','50','100','500','1000','10000'])
+
+# Make sure to convert tradeLimit into wei
+
 tradeLimit = int(tradeLimit)
 contractMonth = st.selectionbox("Enter your contract month", ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
 contractYear = st.number_input("Enter your contract year", )

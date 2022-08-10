@@ -21,7 +21,7 @@ load_dotenv()
 # %% Define and connect a new Web3 provider
 w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 
-with open(Path('/Users/hannahtudo/UofT/project_3_Real_Estate/transactions_abi.json')) as f:
+with open(Path('/Users/hannahtudo/UofT/project_3_Real_Estate/houseTrading_abi.json')) as f:
     transactions_abi = json.load(f)
 
 # %% Set the contract address (this is the address of the deployed contract)
@@ -32,7 +32,26 @@ contract = w3.eth.contract(
 address=contract_address,
 abi=transactions_abi
 )
-#0xCcAD331B578483A72F0cb9bAe32E4afD914547B1
+
+# 0x2CC6adf3965559F7e26E620d8907248f2727e2Ca
+# %%
+# GetAddressBalance(address userAddress)
+import time
+time.sleep(5)
+myBalance = contract.functions.GetAddressBalance("0xB3D965D39cCD788A3cA4dAEa88E308aC832615aC").call()
+
+#%%
+import time
+time.sleep(5)
+
+address = "0x289Cea0051b64E9dddF032AaBED0aCdB81288c7A"
+
+contract.functions.setArray(address).transact()
+arrayLen = contract.functions.arrayCheck().call()
+    
+#%%
+arrayLen = contract.functions.arrayCheck().call()
+
 
 # %%
 
@@ -48,7 +67,7 @@ contract.functions.deposit().transact()
 # %%
 # w3.eth.send_transaction({'to': receiver , 'from': sender , ‘gas’: gas, 'value': value})
 
-myaddress = "0x289Cea0051b64E9dddF032AaBED0aCdB81288c7A"
+myaddress = "0xB3D965D39cCD788A3cA4dAEa88E308aC832615aC"
 #toaddress = "0xCcAD331B578483A72F0cb9bAe32E4afD914547B1"
 toaddress = contract.address
 
