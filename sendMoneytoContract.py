@@ -46,12 +46,10 @@ time.sleep(5)
 
 address = "0x289Cea0051b64E9dddF032AaBED0aCdB81288c7A"
 
-contract.functions.setArray(address).transact()
+contract.functions.setArray(address).transact({'from': address, 'gas': 1000000})
+# %%
 arrayLen = contract.functions.arrayCheck().call()
     
-#%%
-arrayLen = contract.functions.arrayCheck().call()
-
 
 # %%
 

@@ -1,4 +1,4 @@
-/ SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity >0.5.0 <0.9.0;  // must use this version in order to iterate mapping
 
 //import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
@@ -28,21 +28,28 @@ contract HouseTrading
     int256 weiSettlementAmount = getSettleAmount(usdSettlemAmount);
     */
 
-    function getSettleAmount(int256 usdSettlemAmount) public view returns (int256) {
-        int256 usdEthPrice = 214139672966;
-        int256 usdEth = usdEthPrice * 1e10;
-        int256 usd = usdSettlemAmount * (10**18);
-        int256 weiSettlementAmount = (usd *(10**18))/ usdEth;
+    function getSettleAmount(uint usdSettlemAmount) private pure returns (uint) {
+        uint usdEthPrice = 214139672966;
+        uint usdEth = usdEthPrice * 1e10;
+        uint usd = usdSettlemAmount * (10**18);
+        uint weiSettlementAmount = (usd *(10**18))/ usdEth;
         return weiSettlementAmount;
     }
     
-    function abs(int256 x) private pure returns (int256) {
-        return x >= 0 ? x : -x;
-    }
+    //function abs(int256 x) private pure returns (uint) {
+    //    int256 y;
+    //    y = x >= 0 ? x : -x;
+    //    return uint(y);
+    //}
 
-    function min(int256 x, int256 y) private pure returns (int256) {
+    function min(uint x, uint y) private pure returns (uint) {
         return x <= y ? x : y;
     }
+
+    function max(uint x, uint y) private pure returns (uint) {
+        return x >= y ? x : y;
+    }
+
     // Create structure to hold user's trade info:
     
     struct UserInfo 
@@ -104,25 +111,25 @@ contract HouseTrading
         tradeType[userAddress][userArea] = userTradeType;
     }
 
-    mapping(address => mapping(string => uint)) public limitPrice;
+    mapping(address => mapping(string => int256)) public limitPrice;
     function setUserLimitPrice(
-        address userAddress, string memory userArea, uint userLimitPrice
+        address userAddress, string memory userArea, int256 userLimitPrice
         ) 
         public {
         limitPrice[userAddress][userArea] = userLimitPrice;
     }
 
-    mapping(address => mapping(string => uint))  public maxLoss;
+    mapping(address => mapping(string => int256))  public maxLoss;
     function setUserMaxLoss(
-        address userAddress, string memory userArea, uint userMaxLoss
+        address userAddress, string memory userArea, int256 userMaxLoss
         ) 
         public {
         maxLoss[userAddress][userArea] = userMaxLoss;
     }
 
-    mapping(address => mapping(string => uint))  public expDate;
+    mapping(address => mapping(string => int256))  public expDate;
     function setUserExpDate(
-        address userAddress, string memory userArea, uint userExpDate
+        address userAddress, string memory userArea, int256 userExpDate
         ) 
         public {
         expDate[userAddress][userArea] = userExpDate;
@@ -136,13 +143,20 @@ contract HouseTrading
     //uint areaPrice;
     //string areaLocation;
     
+    
+    string [] areaLocation =["Beverly Hills, CA", "Key West, FL"];
+    uint [] areaPrice = [2801900000000000000, 2801900000000000000];
+    uint [] areaDate = [123,123];
+
     mapping(string => mapping(uint => uint)) public housePrice;
-    function setHouseInfo(
-        string memory area, uint price, uint date
-        ) 
+    function setHouseInfo()
+        //string memory area, uint price, uint date 
+        //) 
         public {
-        housePrice[area][date] = price;
-    }
+            for(uint i = 0; i < areaLocation.length; i++){
+                //housePrice[area][date] = price;
+                housePrice[areaLocation[i]][areaDate[i]] = areaPrice[i];
+    }       }
 
     /*
     This function will accept addresses for the two trade participants.  It retrieves the average sold price for the area
@@ -151,55 +165,89 @@ contract HouseTrading
     function to convert USD to Wei.  It uses utility function to calculate the absolute and min value.  
     */
 
+
+    struct tradeVariables {
+        uint dateMapping;
+        uint _price;
+        uint _limitPrice;
+        uint _settlementPrice;
+        uint weiSettleAmount;
+        uint _settlementMaxLoss;
+    }
     function tradePayout(
-        address payable _address1, address payable _address2
+        uint index1, uint index2
         ) view public returns(
-            address payable, address payable, uint
+            address payable, address payable, uint, uint
             )
         {
-        string memory areaMapping = userinfo[indx1].Area;
-        int256 dateMapping = _address1.ExpDate;
-        int256 _price = housePrice[areaMapping][dateMapping];
-        int256 _limitPrice = _address1._limitPrice;
-        int256 _settlementPrice = _price - _limitPrice;
-        int256 winnerSettleAmount;
-        int256 weiSettleAmount = getSettleAmount(abs(_settlementPrice));
-        int256 _settlementMaxLoss = min(_address1.MaxLoss, _address2.MaxLoss);
+        
+        tradeVariables memory _tradeVariables;
+        string memory areaMapping = userinfo[index1].area;
+    
+    // limitPrice 466985000000000000
+    // home price 2801900000000000000
+    // maxLoss 4669800000000000000
+    // 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4 - acc with index 0
+    // 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2 - acc with index 1
+
+        /*
+        uint dateMapping = userinfo[index1].expDate;
+        uint _price = housePrice[areaMapping][dateMapping];
+        uint _limitPrice = userinfo[index1].limitPrice;
+        uint _settlementPrice = max(_price,_limitPrice) - min(_price,_limitPrice);
+        uint winnerSettleAmount;
+        uint weiSettleAmount = getSettleAmount(_settlementPrice);
+        uint _settlementMaxLoss = min(userinfo[index1].maxLoss, userinfo[index2].maxLoss);
+        */
+
+        _tradeVariables.dateMapping = userinfo[index1].expDate;
+        _tradeVariables._price = housePrice[areaMapping][_tradeVariables.dateMapping];
+        _tradeVariables._limitPrice = userinfo[index1].limitPrice;
+        _tradeVariables._settlementPrice = max(_tradeVariables._price,_tradeVariables._limitPrice) - min(_tradeVariables._price,_tradeVariables._limitPrice);
+        uint winnerSettleAmount;
+        //_tradeVariables.weiSettleAmount = getSettleAmount(_tradeVariables._settlementPrice);
+        _tradeVariables.weiSettleAmount = _tradeVariables._settlementPrice;
+        _tradeVariables._settlementMaxLoss = min(userinfo[index1].maxLoss, userinfo[index2].maxLoss);
         address payable winnerAddress;
         address payable loserAddress;
+        uint  loserIndex;
 
-        if(_settlementPrice > 0){
+        if(_tradeVariables._price > _tradeVariables._limitPrice){
 
-            if(keccak256(abi.encodePacked(_address1.TradeType)) == "Long"){
+            if(keccak256(abi.encodePacked(userinfo[index1].tradeType)) == keccak256(abi.encodePacked("Long"))){
                 // _address1 is the winner and _address2 is the loser in the trade
-                winnerAddress = _address1;
-                loserAddress = _address2;
-                winnerSettleAmount = min(weiSettleAmount, _settlementMaxLoss);
+                winnerAddress = userinfo[index1].tradeAddress;
+                loserAddress = userinfo[index2].tradeAddress;
+                loserIndex = index2;
+                winnerSettleAmount = min(_tradeVariables.weiSettleAmount, _tradeVariables._settlementMaxLoss);
             }
             else{
                 // _address2 is the winner and _address1 is the loser in the trade
-                winnerAddress = _address2;
-                loserAddress = _address1;
-                winnerSettleAmount = min(weiSettleAmount, _settlementMaxLoss);
+                winnerAddress = userinfo[index2].tradeAddress;
+                loserAddress = userinfo[index1].tradeAddress;
+                loserIndex = index1;
+                winnerSettleAmount = min(_tradeVariables.weiSettleAmount, _tradeVariables._settlementMaxLoss);
             }
         }
         else{
-            if(keccak256(abi.encodePacked(_address1.TradeType)) == "Short"){
+            if(keccak256(abi.encodePacked(userinfo[index1].tradeType)) == keccak256(abi.encodePacked("Short"))){
                 // _address1 is the winner and _address2 is the loser in the trade
-                winnerAddress = _address1;
-                loserAddress = _address2;
-                winnerSettleAmount = min(weiSettleAmount, _settlementMaxLoss);
+                winnerAddress = userinfo[index1].tradeAddress;
+                loserAddress = userinfo[index2].tradeAddress;
+                loserIndex = index2;
+                winnerSettleAmount = min(_tradeVariables.weiSettleAmount, _tradeVariables._settlementMaxLoss);
 
             }
             else{
                 // _address2 is the winner and _address1 is the loser in the trade
-                winnerAddress = _address2;
-                loserAddress = _address1;
-                winnerSettleAmount = min(weiSettleAmount, _settlementMaxLoss);
+                winnerAddress = userinfo[index2].tradeAddress;
+                loserAddress = userinfo[index1].tradeAddress;
+                loserIndex = index1;
+                winnerSettleAmount = min(_tradeVariables.weiSettleAmount, _tradeVariables._settlementMaxLoss);
             }
         }
 
-        return(winnerAddress, loserAddress, winnerSettleAmount);
+        return(winnerAddress, loserAddress, winnerSettleAmount,loserIndex);
     }
 
     
@@ -209,17 +257,20 @@ contract HouseTrading
     contract and transfer to the winner's wallet address.  It'll then reduce the loser's MaxLoss field by the settlemt amount.
     */
 
-    function tradeSettlement(address payable _address1, address payable _address2) public {
+    function tradeSettlement(uint index1, uint index2) public {
         address payable winnerAddress;
         address payable loserAddress;
-        int256 tradePayment;
-        (winnerAddress, ,) = tradePayout(_address1, _address2);
-        (, loserAddress, ) = tradePayout(_address1, _address2);
-        (, , tradePayment) = tradePayout(_address1, _address2);
+        uint tradePayment;
+        uint loserIndx;
+        (winnerAddress, , , ) = tradePayout(index1, index2);
+        ( , loserAddress, , ) = tradePayout(index1, index2);
+        ( , , tradePayment , ) = tradePayout(index1, index2);
+
         withdraw(tradePayment, winnerAddress);
-        loserAddress.MaxLoss = --tradePayment;
+        userinfo[loserIndx].maxLoss = --tradePayment;
     }
-    
+    //returns(
+     //       address payable, address payable, uint, uint
     
     function deposit() public payable {}
     
@@ -229,8 +280,8 @@ contract HouseTrading
     function withdraw(uint amount, address payable recipient) public {
         return recipient.transfer(amount);
     }
-    uint public a = 100;
-    //uint public dec = --a;
+    
+    
     function matchBuySell() public returns(bool){
         //UserInfo storage _userinfo = userinfo[0];
         // Loop through userinfo array
@@ -239,10 +290,10 @@ contract HouseTrading
                 if(i != j)
                 {
                     if(
-                        keccak256(abi.encodePacked(userinfo[i].Area)) == keccak256(abi.encodePacked(userinfo[j].Area))
-                       && keccak256(abi.encodePacked(userinfo[i].TradeType)) != keccak256(abi.encodePacked(userinfo[j].TradeType))
-                       && userinfo[i].ExpDate == userinfo[j].ExpDate
-                       && userinfo[i].LimitPrice == userinfo[j].LimitPrice
+                        keccak256(abi.encodePacked(userinfo[i].area)) == keccak256(abi.encodePacked(userinfo[j].area))
+                       && keccak256(abi.encodePacked(userinfo[i].tradeType)) != keccak256(abi.encodePacked(userinfo[j].tradeType))
+                       && userinfo[i].expDate == userinfo[j].expDate
+                       && userinfo[i].limitPrice == userinfo[j].limitPrice
                        )
                        {
                         
@@ -250,55 +301,54 @@ contract HouseTrading
                         // delay the transaction so account can very the settlement details
                         // depletes the losing account by the withdrawal's amount
                         
-                        //withdraw(3000000000000000000, userinfo[j].MyAddress);
-                        //userinfo[i].MaxLoss = --a;
-
-
-
-
-
+                        //withdraw(3000000000000000000, userinfo[j].tradeAddress);
+                        
+                        tradeSettlement(i, j);
                         
                         return true;
                         
-
                         }
-                    else 
-                        {
+                    else {
                         return false;
-                        }
+                    }
                 }
             }
         }
     }
 
-
+    //function runOtherFunction() public {
+        //withdraw(3000000000000000000, userinfo[0].tradeAddress);
+    //    matchBuySell();
+    //}
     
     //function() external payable {}
 
+
     fallback() external payable {}
 
+
     function GetUserInfo(uint indx) 
-    public view returns 
-        (
-            string memory, 
-            string memory, 
-            address, 
-            string memory,
-            uint, 
-            uint,
-            string memory
+    public view returns (
+        string memory, 
+        string memory, 
+        address payable, 
+        string memory,
+        uint, 
+        uint,
+        uint,
+        string memory
         ) 
         {
         UserInfo memory _userinfo = userinfo[indx];
-        return
-        (
-            _userinfo.FirstName, 
-            _userinfo.LastName, 
-            _userinfo.MyAddress, 
-            _userinfo.TradeType, 
-            _userinfo.LimitPrice, 
-            _userinfo.MaxLoss, 
-            _userinfo.Area
+        return(
+            _userinfo.firstName, 
+            _userinfo.lastName, 
+            _userinfo.tradeAddress, 
+            _userinfo.tradeType, 
+            _userinfo.limitPrice, 
+            _userinfo.maxLoss, 
+            _userinfo.expDate,
+            _userinfo.area
         );
     }
 
