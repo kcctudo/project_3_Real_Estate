@@ -8,19 +8,21 @@ Created on Thu Aug 11 15:38:18 2022
 from realEstate import w3, load_contract, send_transaction, get_balance, getUsdWei, getCalendarEpoch
 
 # %%
-firstName = "Peter"
-lastName = "Pan"
-address = "0xB3D965D39cCD788A3cA4dAEa88E308aC832615aC"
-tradeType = "Long"
+firstName = "Michael"
+lastName = "Michaels"
+address = "0x48F3a3972B1C6831351adEe04B53F3C70aC07571"
+
+tradeId = 222
+tradeType = "Short"
 
 limitPrice = "1000"
 limitPrice = getUsdWei(int(limitPrice))
 
-tradeLimit = "10000"
+tradeLimit = "1000"
 tradeLimit = getUsdWei(int(tradeLimit))
 
 contractMonth = "1"
-contractYear = "2023"
+contractYear = "2022"
 expDate = getCalendarEpoch(contractYear, contractMonth)
 
 city = ['','Central Toronto', 'Central Toronto-Alexandra Park', 'Central Toronto-Bay Street Corridor', 'Central Toronto-Forest Hill',
@@ -31,10 +33,10 @@ neighborhood = "Key West, FL"
 
 # %%
 contract = load_contract()
-
+# %%
 # Inputting user's entered info into the contract
 txHash = contract.functions.SetUserInfo(
-        firstName, lastName, address, tradeType, limitPrice, tradeLimit, expDate, neighborhood).transact(
+        firstName, lastName, address, tradeId, tradeType, limitPrice, tradeLimit, expDate, neighborhood).transact(
             {'from': address, 'gas': 1000000}
             )
 receipt = w3.eth.waitForTransactionReceipt(txHash)
@@ -45,4 +47,9 @@ receipt = w3.eth.waitForTransactionReceipt(txHash)
 transaction_hash = send_transaction(address, contract.address, tradeLimit)
 
 # Display the Etheremum Transaction Hash
+#%%
+#address = "0x48F3a3972B1C6831351adEe04B53F3C70aC07571"
+address ="0xB3D965D39cCD788A3cA4dAEa88E308aC832615aC"
+xyz = contract.functions.foundOwner(222).transact({'from': address, 'gas': 1000000}) 
+
 

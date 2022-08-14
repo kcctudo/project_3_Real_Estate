@@ -52,7 +52,8 @@ neighborhood = st.selectbox("Choose your neighborhood", city)
 
 if st.button("Submit Info"):     
     
-    # Inputting user's entered info into the contract
+    # SetUserInfo function will be called from the contract.  This function will enter the user's info and create a array in storage
+    
     txHash = contract.functions.SetUserInfo(
             firstName, lastName, address, tradeType, limitPrice, tradeLimit, expDate, neighborhood).transact(
                 {'from': address, 'gas': 1000000}
@@ -61,14 +62,14 @@ if st.button("Submit Info"):
     st.write("Transaction receipt mined:")
     st.write(dict(receipt))
     
-
-if st.button("Deposit your max loss to contract"):
+st.text("\n")
+st.write("You need to deposit your max loss amount to an escrow contract")
+if st.button("Deposit"):
     # deposit account's trade limit to the contract
     time.sleep(5)
     transaction_hash = send_transaction(address, contract.address, tradeLimit)
 
     # Display the Etheremum Transaction Hash
-    st.text("\n")
     st.text("\n")
     st.markdown("## Ethereum Transaction Hash:")
 

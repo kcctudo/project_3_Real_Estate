@@ -85,14 +85,6 @@ def getCalendarEpoch(_Year, _Month):
     
     return epochDate
 
-# %% Function to deposit money
-# def getDeposit(account_address, contract_address, wei_value):
-    
-#    raw_txt = {"from":account_address,
-#    "to": contract_address,
-#    "value": wei_value,
-#    }
-#    return w3.eth.sendTransaction(raw_txt)    
 
 
 

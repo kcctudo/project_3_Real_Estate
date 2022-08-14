@@ -7,44 +7,79 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "matchBuySell",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
+				"internalType": "uint256",
+				"name": "ownerTradeID",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "setHouseInfo",
-		"outputs": [],
+		"name": "foundOwner",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "userAddress",
-				"type": "address"
+				"internalType": "bool",
+				"name": "_noMatch",
+				"type": "bool"
 			},
 			{
-				"internalType": "string",
-				"name": "userArea",
-				"type": "string"
+				"internalType": "bool",
+				"name": "_allSettled",
+				"type": "bool"
 			},
 			{
-				"internalType": "int256",
-				"name": "userExpDate",
-				"type": "int256"
+				"internalType": "bool",
+				"name": "_onlyOne",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_noTradeReg",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "_depletedDeposit",
+				"type": "bool"
 			}
 		],
-		"name": "setUserExpDate",
+		"name": "getTradeStatus",
+		"outputs": [
+			{
+				"internalType": "bool[]",
+				"name": "",
+				"type": "bool[]"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "ownerTradeID",
+				"type": "uint256"
+			}
+		],
+		"name": "matchBuySell",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "setHouseInfo",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -65,6 +100,11 @@
 				"internalType": "address payable",
 				"name": "_tradeAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tradeID",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string",
@@ -100,68 +140,17 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "userAddress",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "index1",
+				"type": "uint256"
 			},
 			{
-				"internalType": "string",
-				"name": "userArea",
-				"type": "string"
-			},
-			{
-				"internalType": "int256",
-				"name": "userLimitPrice",
-				"type": "int256"
+				"internalType": "uint256",
+				"name": "index2",
+				"type": "uint256"
 			}
 		],
-		"name": "setUserLimitPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "userAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "userArea",
-				"type": "string"
-			},
-			{
-				"internalType": "int256",
-				"name": "userMaxLoss",
-				"type": "int256"
-			}
-		],
-		"name": "setUserMaxLoss",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "userAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "userArea",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "userTradeType",
-				"type": "string"
-			}
-		],
-		"name": "setUserTradeType",
+		"name": "tradeSettledIndex",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -183,6 +172,11 @@
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "payable",
+		"type": "constructor"
 	},
 	{
 		"stateMutability": "payable",
@@ -214,30 +208,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"name": "expDate",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
 			}
 		],
 		"stateMutability": "view",
@@ -324,46 +294,22 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
+				"internalType": "uint256",
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			},
 			{
-				"internalType": "string",
+				"internalType": "uint256",
 				"name": "",
-				"type": "string"
+				"type": "uint256"
 			}
 		],
-		"name": "limitPrice",
+		"name": "settledIndexPairs",
 		"outputs": [
 			{
-				"internalType": "int256",
+				"internalType": "bool",
 				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"name": "maxLoss",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -411,30 +357,6 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"name": "tradeType",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
@@ -456,6 +378,11 @@
 				"internalType": "address payable",
 				"name": "tradeAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tradeID",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string",
