@@ -26,7 +26,7 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 def load_contract():
 
     # Load the contract ABI
-    with open(Path('/Users/hannahtudo/UofT/project_3_Real_Estate/houseTrading_abi.json')) as f:
+    with open(Path('houseTrading_abi.json')) as f:
         houseTrading_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
